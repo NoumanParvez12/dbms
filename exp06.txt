@@ -1,0 +1,52 @@
+CREATE TABLE Transactions (
+    TransactionID INT PRIMARY KEY,
+    AccountNo BIGINT,
+    Amount DECIMAL(12,2),
+    Type VARCHAR(20),
+    TransactionDate DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE AuditLog (
+    AuditID INT AUTO_INCREMENT PRIMARY KEY,
+    Event VARCHAR(100),
+    EventDate DATETIME
+);
+
+INSERT INTO Transactions
+(TransactionID, AccountNo, Amount, Type)
+VALUES
+(1, 100101, 5000, 'Withdrawal'),
+(2, 100102, 15000, 'Withdrawal'),
+(3, 100103, 25000, 'Deposit'),
+(4, 100104, 12000, 'Withdrawal'),
+(5, 100105, 8000, 'Withdrawal'),
+(6, 100106, 20000, 'Deposit');
+
+SELECT * FROM Transactions;
+
+SELECT * FROM AuditLog;
+
+delimiter //
+
+create trigger LogHighWid after insert on Transactions 
+for each row 
+begin
+  if new.amount > 10000 and new.type = 'Withdrawal' then
+    insert into AuditLog(Event, EventDate) values('High Withdrawal', NOW());
+end if;
+End//
+
+delimiter ;
+
+INSERT INTO Transactions
+VALUES (7, 100107, 15000, 'Withdrawal', NOW());
+
+SELECT * FROM AuditLog;
+
+INSERT INTO Transactions
+VALUES (8, 100108, 5000, 'Withdrawal', NOW());
+
+INSERT INTO Transactions
+VALUES (9, 100109, 20000, 'Deposit', NOW());
+
+SELECT * FROM AuditLog;

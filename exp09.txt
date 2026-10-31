@@ -1,0 +1,15 @@
+-- create table locations(id int primary key, name varchar(50), location point);
+
+-- insert into locations values(1, 'Pune', ST_GeomFromText('POINT(73.8567 18.5204)')),
+-- (2, 'Mumbai', ST_GeomFromText('POINT(72.8777	19.0760)')),
+-- (3, 'Delhi', ST_GeomFromText('POINT(77.1025	28.7041)'))
+-- ;
+
+-- select name, ST_AsText(location) from locations;
+
+-- select name, ST_X(location) as longitude,
+--              ST_Y(location) as latitude from locations;
+
+-- select name from locations where ST_Y(location) > 20;
+
+-- update locations set location = ST_GeomFromText('POINT(73.9000 18.6000)') where name = 'Pune';
